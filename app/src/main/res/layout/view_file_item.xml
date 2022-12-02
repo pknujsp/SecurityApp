@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp"
+    >
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="파일 명"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/barrier1"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="original_file_created_datetime_label, original_file_created_datetime"
+        />
+
+    <TextView
+        android:id="@+id/original_file_created_datetime_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:text="원본파일 생성 날짜"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/original_file_created_datetime"
+        app:layout_constraintRight_toLeftOf="@id/original_file_created_datetime"
+        />
+
+    <TextView
+        android:id="@+id/original_file_created_datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="2022-12-02 13:00"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="encrypted_file_created_datetime_label, encrypted_file_created_datetime"
+        />
+
+    <TextView
+        android:id="@+id/encrypted_file_created_datetime_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+
+        android:text="암호화 날짜"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/encrypted_file_created_datetime"
+        app:layout_constraintRight_toLeftOf="@id/encrypted_file_created_datetime"
+        />
+
+    <TextView
+        android:id="@+id/encrypted_file_created_datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="2022-12-02 13:00"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@id/barrier3"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="file_size_label, file_size"
+        />
+
+    <TextView
+        android:id="@+id/file_size_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+
+        android:text="파일 크기"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/file_size"
+        app:layout_constraintRight_toLeftOf="@id/file_size"
+        />
+
+    <TextView
+        android:id="@+id/file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:text="16KB"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/file_size_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="file_size_label,file_size"
+        />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/encrypted_date_time_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="encrypted_file_created_datetime_label,encrypted_file_created_datetime"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
