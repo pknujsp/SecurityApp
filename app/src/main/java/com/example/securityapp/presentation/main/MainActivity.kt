@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(binding.fragmentContainerView.id, MainHostFragment(), MainHostFragment.TAG)
             .commitNow()
+
     }
 
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.securityapp.R
@@ -36,6 +37,10 @@ class EncryptedFileListFragment : Fragment() {
             .setPositiveButton("네") { dialog, _ ->
                 dialog.dismiss()
                 LoadingDialog.show(requireActivity())
+                Toast.makeText(requireContext(), "파일 복호화 중입니다", Toast.LENGTH_SHORT).show()
+
+                fileDecryptionViewModel.encryptedFile = file
+                fileDecryptionViewModel.decryptFile(requireContext().applicationContext, "123")
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -78,6 +83,8 @@ class EncryptedFileListFragment : Fragment() {
         //복호화 성공한 파일
         fileDecryptionViewModel.decryptedFile.observe(viewLifecycleOwner) {
             LoadingDialog.dismiss()
+
+            Toast.makeText(requireContext().applicationContext, "복호화 성공", Toast.LENGTH_SHORT).show()
 
             //복호화 프래그먼트로 이동
             parentFragmentManager.beginTransaction()

@@ -24,7 +24,7 @@ class LoadingDialog {
         }
 
         fun dismiss() {
-            showingDialog.run {
+            showingDialog?.run {
                 dismiss()
                 null
             }

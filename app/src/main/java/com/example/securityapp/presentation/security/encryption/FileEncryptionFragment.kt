@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.securityapp.R
+import com.example.securityapp.commons.view.LoadingDialog
 import com.example.securityapp.databinding.FragmentFileEncryptionBinding
 import com.example.securityapp.model.file.FileChooser
 import com.example.securityapp.viewmodel.security.FileEncryptionViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 
 
@@ -31,7 +35,7 @@ class FileEncryptionFragment : Fragment() {
             Toast.makeText(requireContext(), "선택한 파일이 없습니다", Toast.LENGTH_SHORT).show()
         } else {
             fileEncryptionViewModel.selectedFileForEncryption = uri
-            setFileInfo()
+            fileEncryptionViewModel.loadFileInfo(requireContext().applicationContext)
         }
     }
 
@@ -58,23 +62,39 @@ class FileEncryptionFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.encryptBtn.setOnClickListener {
-
+            fileEncryptionViewModel.selectedFileForEncryption?.apply {
+                MaterialAlertDialogBuilder(requireActivity())
+                    .setTitle("파일 암호화")
+                    .setMessage("${binding.fileName.text}을 암호화 하시겠습니까?")
+                    .setPositiveButton("네") { dialog, _ ->
+                        dialog.dismiss()
+                        LoadingDialog.show(requireActivity())
+                        fileEncryptionViewModel.encryptFile(requireContext().applicationContext, "123")
+                    }
+                    .setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }.create().show()
+            }
         }
 
         binding.fileChooserBtn.setOnClickListener {
             fileChooser?.openFileChooser(fileOnChooseListener)
         }
-    }
 
-    private fun setFileInfo() {
-        fileEncryptionViewModel.selectedFileForEncryption?.run {
-            requireContext().contentResolver.query(this, null, null, null, null)
-        }?.use { cursor ->
-            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            cursor.moveToFirst()
-            binding.fileName.text = cursor.getString(nameIndex)
+        fileEncryptionViewModel.selectedFile.observe(viewLifecycleOwner) {
+            binding.fileName.text = it.name
+        }
+
+        fileEncryptionViewModel.encryptedFile.observe(viewLifecycleOwner) {
+            LoadingDialog.dismiss()
+
+            if (it) {
+                Toast.makeText(requireContext().applicationContext, "암호화 성공", Toast.LENGTH_SHORT).show()
+            } else
+                Toast.makeText(requireContext().applicationContext, "암호화 실패", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

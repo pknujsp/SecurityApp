@@ -1,7 +1,7 @@
 package com.example.securityapp.model.file.repository
 
-import android.content.Context
+import com.example.securityapp.model.file.data.FileDto
 
 interface FilesRepository {
-    suspend fun getEncryptedFiles(context: Context)
+    suspend fun getEncryptedFiles(): List<FileDto>
 }
