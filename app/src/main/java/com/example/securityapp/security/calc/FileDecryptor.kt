@@ -18,7 +18,7 @@ class FileDecryptor {
     companion object {
         private val iv = arrayOf<Byte>(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16)
 
-        suspend fun decryptFile(context: Context, fileDto: FileDto, password: String): Uri? {
+        suspend fun decryptFile(context: Context, fileDto: FileDto, password: String): File? {
             var decryptedFile: File? = null
             try {
                 // 원본 파일의 확장자 분석
@@ -78,7 +78,7 @@ class FileDecryptor {
                     }
                 }
 
-                return decryptedFile.toUri()
+                return decryptedFile
             } catch (e: Exception) {
                 decryptedFile?.apply {
                     if (exists())

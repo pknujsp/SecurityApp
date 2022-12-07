@@ -1,6 +1,7 @@
 package com.example.securityapp.viewmodel.security
 
 import android.content.Context
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.securityapp.model.file.data.FileDto
@@ -22,7 +23,9 @@ class FileDecryptionViewModel : ViewModel() {
             val result = FileDecryptor.decryptFile(context, encryptedFile!!, password)
             withContext(Dispatchers.Main) {
                 decryptedFile.value = encryptedFile!!.run {
-                    FileDto(false, name, result!!, "", "")
+                    FileDto(false, name, result!!.toUri()).also {
+                        it.file = result
+                    }
                 }
             }
         }

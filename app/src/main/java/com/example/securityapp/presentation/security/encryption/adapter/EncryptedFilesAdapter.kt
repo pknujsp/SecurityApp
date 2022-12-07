@@ -1,7 +1,6 @@
 package com.example.securityapp.presentation.security.encryption.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.securityapp.commons.interfaces.ListItemOnClickListener
@@ -28,7 +27,6 @@ class EncryptedFilesAdapter(private val fileOnClickListener: ListItemOnClickList
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(file: FileDto) {
-            binding.encryptedDateTimeGroup.visibility = if (file.isEncrypted) View.VISIBLE else View.GONE
             binding.name.text = file.name
 
             binding.root.setOnClickListener {

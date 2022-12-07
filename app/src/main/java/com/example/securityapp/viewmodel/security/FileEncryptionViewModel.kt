@@ -28,8 +28,7 @@ class FileEncryptionViewModel : ViewModel() {
             val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
             cursor.moveToFirst()
             val fileDto = FileDto(
-                false, cursor.getString(nameIndex), selectedFileForEncryption!!,
-                "", ""
+                false, cursor.getString(nameIndex), selectedFileForEncryption!!
             )
 
             cursor.close()

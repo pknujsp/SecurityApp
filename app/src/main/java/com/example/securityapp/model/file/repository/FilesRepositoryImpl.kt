@@ -9,15 +9,13 @@ object FilesRepositoryImpl : FilesRepository {
     override suspend fun getEncryptedFiles(): List<FileDto> {
         val path = "${Environment.getExternalStorageDirectory()}/encrypted_files"
         val directory = File(path)
-        val files = directory.listFiles()
 
         val fileDtoList = mutableListOf<FileDto>()
-        var dto: FileDto? = null
-        for (file in files) {
-            if (file.extension == "jsp") {
-                dto = FileDto(true, file.name, file.toUri(), "", "")
-                dto.file = file
-                fileDtoList.add(dto)
+        for (file in directory.listFiles()) {
+            if (file.extension == "encd") {
+                fileDtoList.add(FileDto(true, file.name, file.toUri()).apply {
+                    this.file = file
+                })
             }
         }
 

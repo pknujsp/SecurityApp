@@ -83,7 +83,6 @@ class EncryptedFileListFragment : Fragment() {
         //복호화 성공한 파일
         fileDecryptionViewModel.decryptedFile.observe(viewLifecycleOwner) {
             LoadingDialog.dismiss()
-
             Toast.makeText(requireContext().applicationContext, "복호화 성공", Toast.LENGTH_SHORT).show()
 
             //복호화 프래그먼트로 이동

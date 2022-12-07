@@ -119,6 +119,7 @@
         android:id="@+id/file_size_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:constraint_referenced_ids="file_size_label,file_size"
         />
 
@@ -126,7 +127,18 @@
         android:id="@+id/encrypted_date_time_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
+
         app:constraint_referenced_ids="encrypted_file_created_datetime_label,encrypted_file_created_datetime"
+        />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/date_time_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+
+        app:constraint_referenced_ids="original_file_created_datetime,original_file_created_datetime_label"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

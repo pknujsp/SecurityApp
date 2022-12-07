@@ -40,7 +40,7 @@ class FileChooser(private val activityResultRegistry: ActivityResultRegistry) : 
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).run {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "*/*"
-            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("text/*", "image/*"))
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/*", "text/*"))
             Intent.createChooser(this, "암호화할 파일 선택")
         }
         fileChooserActivityResultLauncher.launch(intent)

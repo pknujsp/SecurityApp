@@ -38,8 +38,7 @@ class MainFragment : Fragment() {
             parentFragmentManager.beginTransaction().hide(this@MainFragment).add(
                 R.id.fragment_container_view, FileEncryptionFragment(),
                 FileEncryptionFragment.TAG
-            )
-                .addToBackStack(FileEncryptionFragment.TAG).commit()
+            ).addToBackStack(FileEncryptionFragment.TAG).commit()
         }
         binding.showEncryptedFileListBtn.setOnClickListener {
             parentFragmentManager.beginTransaction().hide(this@MainFragment).add(

@@ -8,8 +8,6 @@ data class FileDto(
     val isEncrypted: Boolean,
     val name: String,
     val uri: Uri,
-    val encryptedDateTime: String,
-    val decryptedDateTime: String
 ) {
     var file: File? = null
 

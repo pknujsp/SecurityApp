@@ -37,7 +37,7 @@ class FileEncryptor {
                         delete()
                 }
                 // 파일 암호화 키 생성
-                var key: ByteArray? = ("t784$password").encodeToByteArray()
+                var key: ByteArray = ("t784$password").encodeToByteArray()
                 // 비밀번호 키를 SHA-1으로 암호화
                 val sha = MessageDigest.getInstance("SHA-1")
                 key = sha.digest(key)
