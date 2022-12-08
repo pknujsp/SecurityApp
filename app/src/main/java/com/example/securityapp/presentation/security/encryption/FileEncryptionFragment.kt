@@ -73,12 +73,10 @@ class FileEncryptionFragment : Fragment() {
                                 Toast.makeText(requireContext().applicationContext, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
                                 return@setPositiveButton
                             }
-                            dialog.dismiss()
                             LoadingDialog.show(requireActivity())
-                            fileEncryptionViewModel.encryptFile(requireContext().applicationContext, "123")
+                            fileEncryptionViewModel.encryptFile(requireContext().applicationContext, this.textInputPassword.text.toString())
                         }
                         .setNegativeButton(R.string.cancel) { dialog, _ ->
-                            dialog.dismiss()
                         }.create().show()
                 }
 

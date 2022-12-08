@@ -45,15 +45,13 @@ class EncryptedFileListFragment : Fragment() {
                         Toast.makeText(requireContext().applicationContext, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
-                    dialog.dismiss()
                     LoadingDialog.show(requireActivity())
                     Toast.makeText(requireContext(), "파일 복호화 중입니다", Toast.LENGTH_SHORT).show()
 
                     fileDecryptionViewModel.encryptedFile = file
-                    fileDecryptionViewModel.decryptFile(requireContext().applicationContext, "123")
+                    fileDecryptionViewModel.decryptFile(requireContext().applicationContext, this.textInputPassword.text.toString())
                 }
                 .setNegativeButton(R.string.cancel) { dialog, _ ->
-                    dialog.dismiss()
                 }.create().show()
         }
     }
