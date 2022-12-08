@@ -15,11 +15,6 @@ class FileEncryptionViewModel : ViewModel() {
     val encryptedFile = MutableLiveData<Boolean>()
     var selectedFileForEncryption: Uri? = null
     val selectedFile = MutableLiveData<FileDto>()
-    var job: Job? = null
-
-    override fun onCleared() {
-        super.onCleared()
-    }
 
     fun loadFileInfo(context: Context) {
         selectedFileForEncryption?.run {
@@ -37,7 +32,7 @@ class FileEncryptionViewModel : ViewModel() {
     }
 
     fun encryptFile(context: Context, password: String) {
-        job = CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val result = FileEncryptor.encryptFile(context, selectedFile.value!!, password)
             withContext(Main) {
                 encryptedFile.value = result

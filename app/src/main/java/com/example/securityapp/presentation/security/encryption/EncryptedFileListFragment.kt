@@ -12,6 +12,7 @@ import com.example.securityapp.R
 import com.example.securityapp.commons.interfaces.ListItemOnClickListener
 import com.example.securityapp.commons.view.LoadingDialog
 import com.example.securityapp.databinding.FragmentEncryptedFileListBinding
+import com.example.securityapp.databinding.ViewDialogPasswordBinding
 import com.example.securityapp.model.file.data.FileDto
 import com.example.securityapp.presentation.security.decryption.FileDecryptionFragment
 import com.example.securityapp.presentation.security.encryption.adapter.EncryptedFilesAdapter
@@ -31,20 +32,30 @@ class EncryptedFileListFragment : Fragment() {
     }
 
     private val fileOnClickListener = ListItemOnClickListener<FileDto> { file, _ ->
-        MaterialAlertDialogBuilder(requireActivity())
-            .setTitle("파일 복호화")
-            .setMessage("${file.name}을 복호화 하시겠습니까?")
-            .setPositiveButton("네") { dialog, _ ->
-                dialog.dismiss()
-                LoadingDialog.show(requireActivity())
-                Toast.makeText(requireContext(), "파일 복호화 중입니다", Toast.LENGTH_SHORT).show()
 
-                fileDecryptionViewModel.encryptedFile = file
-                fileDecryptionViewModel.decryptFile(requireContext().applicationContext, "123")
-            }
-            .setNegativeButton(R.string.cancel) { dialog, _ ->
-                dialog.dismiss()
-            }.create().show()
+        ViewDialogPasswordBinding.inflate(layoutInflater).apply {
+            val msg = "${file.name}을 복호화 하시겠습니까?"
+            this.msg.text = msg
+
+            MaterialAlertDialogBuilder(requireActivity())
+                .setTitle("파일 복호화")
+                .setView(root)
+                .setPositiveButton("네") { dialog, _ ->
+                    if (this.textInputPassword.text.isNullOrEmpty()) {
+                        Toast.makeText(requireContext().applicationContext, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+                    dialog.dismiss()
+                    LoadingDialog.show(requireActivity())
+                    Toast.makeText(requireContext(), "파일 복호화 중입니다", Toast.LENGTH_SHORT).show()
+
+                    fileDecryptionViewModel.encryptedFile = file
+                    fileDecryptionViewModel.decryptFile(requireContext().applicationContext, "123")
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }.create().show()
+        }
     }
 
     private val encryptedFilesAdapter = EncryptedFilesAdapter(fileOnClickListener)
@@ -52,7 +63,6 @@ class EncryptedFileListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(

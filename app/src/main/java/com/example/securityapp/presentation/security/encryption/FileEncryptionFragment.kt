@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.example.securityapp.R
 import com.example.securityapp.commons.view.LoadingDialog
 import com.example.securityapp.databinding.FragmentFileEncryptionBinding
+import com.example.securityapp.databinding.ViewDialogPasswordBinding
 import com.example.securityapp.model.file.FileChooser
 import com.example.securityapp.presentation.main.MainFragment
 import com.example.securityapp.viewmodel.security.FileEncryptionViewModel
@@ -60,17 +61,27 @@ class FileEncryptionFragment : Fragment() {
         }
         binding.encryptBtn.setOnClickListener {
             fileEncryptionViewModel.selectedFileForEncryption?.apply {
-                MaterialAlertDialogBuilder(requireActivity())
-                    .setTitle("파일 암호화")
-                    .setMessage("${binding.fileName.text}을 암호화 하시겠습니까?")
-                    .setPositiveButton("네") { dialog, _ ->
-                        dialog.dismiss()
-                        LoadingDialog.show(requireActivity())
-                        fileEncryptionViewModel.encryptFile(requireContext().applicationContext, "123")
-                    }
-                    .setNegativeButton(R.string.cancel) { dialog, _ ->
-                        dialog.dismiss()
-                    }.create().show()
+                ViewDialogPasswordBinding.inflate(layoutInflater).apply {
+                    val msg = "${binding.fileName.text}을 암호화 하시겠습니까?"
+                    this.msg.text = msg
+
+                    MaterialAlertDialogBuilder(requireActivity())
+                        .setTitle("파일 암호화")
+                        .setView(root)
+                        .setPositiveButton("네") { dialog, _ ->
+                            if (this.textInputPassword.text.isNullOrEmpty()) {
+                                Toast.makeText(requireContext().applicationContext, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
+                                return@setPositiveButton
+                            }
+                            dialog.dismiss()
+                            LoadingDialog.show(requireActivity())
+                            fileEncryptionViewModel.encryptFile(requireContext().applicationContext, "123")
+                        }
+                        .setNegativeButton(R.string.cancel) { dialog, _ ->
+                            dialog.dismiss()
+                        }.create().show()
+                }
+
             }
         }
 

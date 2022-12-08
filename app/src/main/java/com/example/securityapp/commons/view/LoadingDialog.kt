@@ -17,6 +17,7 @@ class LoadingDialog {
 
             showingDialog =
                 MaterialAlertDialogBuilder(activity)
+                    .setCancelable(false)
                     .setView(
                         ViewLoadingBinding.inflate(activity.layoutInflater, null, false).root
                     ).create()
