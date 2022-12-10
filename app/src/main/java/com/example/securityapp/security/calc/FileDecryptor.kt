@@ -3,23 +3,31 @@ package com.example.securityapp.security.calc
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.text.TextUtils.lastIndexOf
+import android.text.TextUtils.substring
 import androidx.core.net.toUri
 import com.example.securityapp.model.file.data.FileDto
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.*
 import java.security.MessageDigest
 import java.util.*
+import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
 import javax.crypto.CipherOutputStream
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class FileDecryptor {
     companion object {
         private val iv = arrayOf<Byte>(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16)
 
-        suspend fun decryptFile(context: Context, fileDto: FileDto, password: String): File? {
+        suspend fun decryptFile(context: Context, fileDto: FileDto, password: String) = suspendCancellableCoroutine<File> { continuation ->
             var decryptedFile: File? = null
+
             try {
                 // 원본 파일의 확장자 분석
                 val originalFileExtension = fileDto.name.run {
@@ -78,13 +86,16 @@ class FileDecryptor {
                     }
                 }
 
-                return decryptedFile
+                continuation.resume(decryptedFile)
             } catch (e: Exception) {
                 decryptedFile?.apply {
                     if (exists())
                         delete()
                 }
-                return null
+
+                continuation.resumeWithException(e)
+            } finally {
+
             }
 
         }

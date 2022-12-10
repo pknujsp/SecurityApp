@@ -19,6 +19,7 @@ import com.example.securityapp.presentation.security.encryption.adapter.Encrypte
 import com.example.securityapp.viewmodel.files.EncryptedFilesViewModel
 import com.example.securityapp.viewmodel.security.FileDecryptionViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import javax.crypto.BadPaddingException
 
 
 class EncryptedFileListFragment : Fragment() {
@@ -91,14 +92,20 @@ class EncryptedFileListFragment : Fragment() {
         //복호화 성공한 파일
         fileDecryptionViewModel.decryptedFile.observe(viewLifecycleOwner) {
             LoadingDialog.dismiss()
-            Toast.makeText(requireContext().applicationContext, "복호화 성공", Toast.LENGTH_SHORT).show()
 
-            //복호화 프래그먼트로 이동
-            parentFragmentManager.beginTransaction()
-                .hide(this@EncryptedFileListFragment)
-                .add(R.id.fragment_container_view, FileDecryptionFragment(), FileDecryptionFragment.TAG)
-                .addToBackStack(FileDecryptionFragment.TAG)
-                .commit()
+            if (it.isSuccess) {
+                Toast.makeText(requireContext().applicationContext, "복호화 성공", Toast.LENGTH_SHORT).show()
+
+                //복호화 프래그먼트로 이동
+                parentFragmentManager.beginTransaction()
+                    .hide(this@EncryptedFileListFragment)
+                    .add(R.id.fragment_container_view, FileDecryptionFragment(), FileDecryptionFragment.TAG)
+                    .addToBackStack(FileDecryptionFragment.TAG)
+                    .commit()
+            } else {
+                Toast.makeText(requireContext().applicationContext, "복호화 실패", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 

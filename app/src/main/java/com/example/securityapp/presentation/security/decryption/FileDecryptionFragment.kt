@@ -48,13 +48,13 @@ class FileDecryptionFragment : Fragment() {
         }
 
         binding.showFileBtn.setOnClickListener {
-            openFile(fileDecryptionViewModel.decryptedFile.value!!.file!!)
+            openFile(fileDecryptionViewModel.decryptedFile.value!!.getOrNull()!!.file!!)
         }
 
         fileDecryptionViewModel.decryptedFile.observe(viewLifecycleOwner) {
             // 복호화한 파일
             it?.apply {
-                binding.fileName.text = file!!.name
+                binding.fileName.text = getOrNull()!!.name
             }
         }
     }
