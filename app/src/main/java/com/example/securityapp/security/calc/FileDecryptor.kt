@@ -2,6 +2,7 @@ package com.example.securityapp.security.calc
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.text.TextUtils.lastIndexOf
 import android.text.TextUtils.substring
@@ -42,7 +43,11 @@ class FileDecryptor {
                 }
 
                 // 저장할 디렉토리
-                val saveDirectory = "${Environment.getExternalStorageDirectory()}/encrypted_files"
+                val saveDirectory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/encrypted_files"
+                else
+                    "${Environment.getExternalStorageDirectory()}/encrypted_files"
+
                 val directory = File(saveDirectory)
 
                 directory.apply {

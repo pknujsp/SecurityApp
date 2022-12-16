@@ -1,9 +1,12 @@
 package com.example.securityapp.security.calc
 
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import com.example.securityapp.model.file.data.FileDto
 import java.io.*
+import java.nio.file.Files.delete
+import java.nio.file.Files.exists
 import java.security.MessageDigest
 import java.util.*
 import javax.crypto.Cipher
@@ -22,7 +25,11 @@ class FileEncryptor {
                 val encryptedFileName = "encrypted_${fileDto.getRealName()}_${fileDto.getExtension()}.encd"
 
                 // 저장할 디렉토리
-                val saveDirectory = "${Environment.getExternalStorageDirectory()}/encrypted_files"
+                val saveDirectory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/encrypted_files"
+                else
+                    "${Environment.getExternalStorageDirectory()}/encrypted_files"
+
                 val directory = File(saveDirectory)
 
                 directory.apply {
@@ -45,6 +52,7 @@ class FileEncryptor {
 
                 // 파일을 AES로 암호화
                 val secretKeySpec = SecretKeySpec(key, "AES")
+                // 운영모드 CBC
                 val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray()))
 
