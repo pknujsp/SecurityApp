@@ -1,26 +1,19 @@
 package com.example.securityapp.security.calc
 
 import android.content.Context
-import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.text.TextUtils.lastIndexOf
-import android.text.TextUtils.substring
-import androidx.core.net.toUri
 import com.example.securityapp.model.file.data.FileDto
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.*
 import java.security.MessageDigest
 import java.util.*
-import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
-import javax.crypto.CipherOutputStream
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class FileDecryptor {
     companion object {
@@ -43,12 +36,12 @@ class FileDecryptor {
                 }
 
                 // 저장할 디렉토리
-                val saveDirectory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/encrypted_files"
                 else
                     "${Environment.getExternalStorageDirectory()}/encrypted_files"
 
-                val directory = File(saveDirectory)
+                val directory = File(path)
 
                 directory.apply {
                     if (!exists())
@@ -63,14 +56,15 @@ class FileDecryptor {
                 }
                 var key: ByteArray? = ("t784$password").encodeToByteArray()
 
-                // 비밀번호 키를 SHA-1으로 암호화
+                // 비밀번호 키를 SHA-1으로 암호화, 메시지 다이제스트 생성
                 val sha = MessageDigest.getInstance("SHA-1")
                 key = sha.digest(key)
                 key = Arrays.copyOf(key, 16)
 
-                // AES로 암호화된 파일을 복호화
+                // AES로 암호화된 파일을 복호화하고, CBC모드로 사용
                 val secretKeySpec = SecretKeySpec(key, "AES")
                 val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
+                // 초기벡터를 넣어준다.
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray()))
 
                 // 복호화할 파일 스트림 연결

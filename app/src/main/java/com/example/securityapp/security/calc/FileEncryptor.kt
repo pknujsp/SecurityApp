@@ -5,8 +5,6 @@ import android.os.Build
 import android.os.Environment
 import com.example.securityapp.model.file.data.FileDto
 import java.io.*
-import java.nio.file.Files.delete
-import java.nio.file.Files.exists
 import java.security.MessageDigest
 import java.util.*
 import javax.crypto.Cipher
@@ -25,12 +23,12 @@ class FileEncryptor {
                 val encryptedFileName = "encrypted_${fileDto.getRealName()}_${fileDto.getExtension()}.encd"
 
                 // 저장할 디렉토리
-                val saveDirectory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)}/encrypted_files"
                 else
                     "${Environment.getExternalStorageDirectory()}/encrypted_files"
 
-                val directory = File(saveDirectory)
+                val directory = File(path)
 
                 directory.apply {
                     if (!exists())
@@ -45,7 +43,7 @@ class FileEncryptor {
                 }
                 // 파일 암호화 키 생성
                 var key: ByteArray = ("t784$password").encodeToByteArray()
-                // 비밀번호 키를 SHA-1으로 암호화
+                // 비밀번호 키를 SHA-1으로 암호화, 메시지 다이제스트 생성
                 val sha = MessageDigest.getInstance("SHA-1")
                 key = sha.digest(key)
                 key = Arrays.copyOf(key, 16)
@@ -54,6 +52,7 @@ class FileEncryptor {
                 val secretKeySpec = SecretKeySpec(key, "AES")
                 // 운영모드 CBC
                 val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
+                // 초기벡터를 넣어준다
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray()))
 
                 context.contentResolver.openInputStream(fileDto.uri)?.use { originalInputStream ->
@@ -63,6 +62,7 @@ class FileEncryptor {
                         var line = bufferedReader.readLine()
 
                         while (line != null) {
+                            // 파일 스트림 연결하여 데이터 전달
                             bufferedOutputStream.write(line)
                             line = bufferedReader.readLine()
                         }
